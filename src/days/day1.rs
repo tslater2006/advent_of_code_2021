@@ -1,14 +1,15 @@
 use std::fs;
 
 pub fn solve_part_1() {
-    let input_string: i32 = fs::read_to_string("inputs\\day1.txt")
+    let sum_of_ints: i32 = fs::read_to_string("inputs\\day1.txt")
         .unwrap()
         .lines()
         .map(|f| f.parse::<i32>().unwrap())
         .sum();
 
-        println!("{}", input_string);
-    
+    println!("Part 1 answer: {}", sum_of_ints);
 }
 
-pub fn solve_part_2() {}
+pub fn solve_part_2() {
+    println!("Part 2 answer: ");
+}
