@@ -1,5 +1,14 @@
 mod days;
-fn main() {
-    days::day1::solve_part_1();
-    days::day1::solve_part_2();
+
+macro_rules! run_day {
+    ($a:ident) => {
+        days::$a::solve_part_1();
+        days::$a::solve_part_2();
+    };
 }
+
+
+fn main() {
+    run_day!(day1);
+}
+
