@@ -13,8 +13,14 @@ macro_rules! run_day {
 
 
 fn main() {
+
+    /* silly hack to stop "dead code" warnings */
+    if 1 == 0 {
+        run_day!(day1);
+    }
+
     let start = Instant::now();
-    run_day!(day1);
+    run_day!(day2);
     let stop = Instant::now();
 
     println!("Ran in {:?}", stop.sub(start));
