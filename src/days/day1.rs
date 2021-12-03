@@ -19,9 +19,14 @@ pub fn solve_part_1() {
 pub fn solve_part_2() {
     let list_of_ints: Vec<i32> = INPUT.lines().map(|f| f.parse::<i32>().unwrap()).collect();
 
-    let groups_of_three: Vec<i32> = list_of_ints.windows(3).map(|w| w.iter().sum()).collect();
+    /* let groups_of_three: Vec<i32> = list_of_ints.windows(3).map(|w| w.iter().sum()).collect();
+    let part2_answer = groups_of_three.windows(2).filter(|f| f[0] < f[1]).count();*/
 
-    let part2_answer = groups_of_three.windows(2).filter(|f| f[0] < f[1]).count();
+    let part2_answer = list_of_ints
+        .windows(4)
+        .filter(|items| items[3] > items[0])
+        .count();
+
     println!("Day #1 Part 2 Answer: {}", part2_answer);
 
     /* let mut increases = 0;
