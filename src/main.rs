@@ -17,11 +17,11 @@ fn main() {
     /* silly hack to stop "dead code" warnings */
 
     if 1 == 0 {
-        run_day!(day1,day2);
+        run_day!(day1,day2, day3);
     }
 
     let start = Instant::now();
-    run_day!(day3);
+    run_day!(day4);
     let stop = Instant::now();
 
     println!("Ran in {:?}", stop.sub(start));
