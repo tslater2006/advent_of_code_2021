@@ -1,4 +1,4 @@
-use std::vec;
+use std::fmt;
 
 const INPUT: &str = include_str!("..\\..\\inputs\\day4.txt");
 
@@ -12,6 +12,27 @@ struct BingoBoard {
     board: [[u16; 5]; 5],
     mask: [[u16; 5]; 5],
     result: BoardResult,
+}
+
+impl fmt::Display for BingoBoard {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // Write strictly the first element into the supplied output
+        // stream: `f`. Returns `fmt::Result` which indicates whether the
+        // operation succeeded or failed. Note that `write!` uses syntax which
+        // is very similar to `println!`.
+
+        for y in 0..5 {
+            for x in 0..5 {
+                if self.board[y][x] < 10 {
+                    write!(f, " {} ", self.board[y][x]).unwrap();
+                } else {
+                    write!(f, "{} ", self.board[y][x]).unwrap();
+                }
+            }
+            writeln!(f,"").unwrap();
+        }
+        Ok(())
+    }
 }
 
 impl BingoBoard {
@@ -41,19 +62,6 @@ impl BingoBoard {
         }
 
         new_board
-    }
-
-    fn print_board(&self) {
-        for y in 0..5 {
-            for x in 0..5 {
-                if self.board[y][x] < 10 {
-                    print!(" {} ", self.board[y][x]);
-                } else {
-                    print!("{} ", self.board[y][x]);
-                }
-            }
-            println!("");
-        }
     }
 
     fn get_unused_sum(&mut self) -> u16 {
