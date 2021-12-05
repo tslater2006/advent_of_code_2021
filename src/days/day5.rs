@@ -84,7 +84,7 @@ pub fn solve_part_1() {
         .sum();
     //let answer = points.into_values().filter(|v| *v > 1).count();
 
-    println!("Day 5 Part 1: {}", answer);
+    println!("Day #5 Part 1: {}", answer);
 }
 
 pub fn solve_part_2() {
@@ -108,5 +108,5 @@ pub fn solve_part_2() {
         .map(|row| row.into_iter().filter(|v| *v > 1).count())
         .sum();
 
-    println!("Day 5 Part 2: {}", answer);
+    println!("Day #5 Part 2: {}", answer);
 }

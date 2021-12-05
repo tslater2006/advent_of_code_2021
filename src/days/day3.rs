@@ -20,7 +20,7 @@ pub fn solve_part_1() {
             }
         }
     }
-    println!("Day 3 Part 1: {}", gamma * epsilon);
+    println!("Day #3 Part 1: {}", gamma * epsilon);
 }
 
 pub fn solve_part_2() {
@@ -62,7 +62,7 @@ pub fn solve_part_2() {
     let oxygen_answer = oxygen_lines[0].as_bytes().iter().fold(0 as u32, |a,b | (a << 1) + (*b-0x30) as u32);
     let co2_answer = co2_lines[0].as_bytes().iter().fold(0 as u32, |a,b | (a << 1) + (*b-0x30) as u32);
 
-    println!("Day 3 Part 2: {:?}", oxygen_answer * co2_answer);
+    println!("Day #3 Part 2: {:?}", oxygen_answer * co2_answer);
 }
 
 /* effectively adds up all the bits by column, and then determines if count is > half* of all the numbers
