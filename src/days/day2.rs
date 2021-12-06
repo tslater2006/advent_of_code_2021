@@ -36,7 +36,7 @@ pub fn solve_part_1() {
         }
     }
 
-    println!("Day #2 Part 1 answer: {}", my_sub.position * my_sub.depth);
+    println!("Day #2 Part 1: {}", my_sub.position * my_sub.depth);
 }
 
 pub fn solve_part_2() {
@@ -66,5 +66,5 @@ pub fn solve_part_2() {
         }
     }
 
-    println!("Day #2 Part 2 answer: {}", my_sub.position * my_sub.depth);
+    println!("Day #2 Part 2: {}", my_sub.position * my_sub.depth);
 }

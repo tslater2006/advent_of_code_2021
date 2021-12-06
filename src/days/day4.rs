@@ -128,7 +128,7 @@ pub fn solve_part_1() {
             let result = board.play_number(num);
             match result {
                 BoardResult::Win(winning_num) => {
-                    println!("Day #4 Part 1 {}", board.get_unused_sum() * winning_num);
+                    println!("Day #4 Part 1: {}", board.get_unused_sum() * winning_num);
                     break 'num_loop;
                 }
                 BoardResult::NoWin => {}
@@ -158,7 +158,7 @@ pub fn solve_part_2() {
         
                             winning_board_count += 1;
                             if winning_board_count == board_count {
-                                println!("Day #4 Part 2 {}", board.get_unused_sum() * winning_num);
+                                println!("Day #4 Part 2: {}", board.get_unused_sum() * winning_num);
                                 break 'num_loop;
                             }
                         }

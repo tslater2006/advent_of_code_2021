@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 const INPUT: &str = include_str!("..\\..\\inputs\\day5.txt");
 
 #[derive(Debug)]
@@ -23,28 +21,7 @@ impl Line {
             .collect::<Vec<i16>>();
 
         /* determine appropriate delta to get from p1 to p2 */
-        let travel: (i16, i16);
-        if p1[0] == p2[0] {
-            /* X coords are the same */
-            if p1[1] < p2[1] {
-                travel = (0, 1);
-            } else {
-                travel = (0, -1);
-            }
-        } else if p1[1] == p2[1] {
-            /* Y coords are the same */
-            if p1[0] < p2[0] {
-                travel = (1, 0);
-            } else {
-                travel = (-1, 0);
-            }
-        } else {
-            /* we have a diagonal! */
-            let x_delta = if p1[0] < p2[0] { 1 } else { -1 };
-            let y_delta = if p1[1] < p2[1] { 1 } else { -1 };
-
-            travel = (x_delta, y_delta);
-        }
+        let travel = ((p2[0]-p1[0]).signum(),(p2[1]-p1[1]).signum());
 
         Line {
             point_1: (p1[0], p1[1]),
