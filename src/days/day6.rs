@@ -33,7 +33,7 @@ pub fn solve_part_1() {
         .map(|f| 1 + get_spawn_count(&mut cache, *f as usize, 80))
         .sum();
 
-    println!("Answer: {}", ans);
+    println!("Day #6 Part 1: {}", ans);
 
 }
 
@@ -45,5 +45,5 @@ pub fn solve_part_2() {
         .map(|f| 1 + get_spawn_count(&mut cache, *f as usize, 256))
         .sum();
 
-    println!("Answer: {}", ans);
+    println!("Day #6 Part 2: {}", ans);
 }
