@@ -1,4 +1,4 @@
-const INPUT: &str = include_str!("..\\..\\inputs\\day7sample.txt");
+const INPUT: &str = include_str!("..\\..\\inputs\\day7.txt");
 
 pub fn solve_part_1() {
     let mut crabs: Vec<i32> = INPUT.split(",").map(|s| s.parse().unwrap()).collect();
