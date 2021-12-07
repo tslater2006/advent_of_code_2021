@@ -1,6 +1,6 @@
 mod days;
 
-use std::{time::Instant, ops::Sub};
+use std::{ops::Sub, time::Instant};
 
 macro_rules! run_day {
     ($($a:ident),*) => {
@@ -14,19 +14,16 @@ macro_rules! run_day {
     };
 }
 
-
 fn main() {
-
     /* silly hack to stop "dead code" warnings */
 
     if 1 == 0 {
-        run_day!(day1,day2, day3, day4,day5);
+        run_day!(day1, day2, day3, day4, day5, day6);
     }
 
     let start = Instant::now();
-    run_day!(day6);
+    run_day!(day7);
     let stop = Instant::now();
 
     println!("Ran in {:?}ms", stop.sub(start).as_secs_f64() * 1000.0);
 }
-
