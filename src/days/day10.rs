@@ -1,4 +1,25 @@
+use std::{collections::HashMap, mem::discriminant};
+
 const INPUT: &str = include_str!("..\\..\\inputs\\day10.txt");
+
+lazy_static! {
+    static ref open_chars: HashMap<char, Chunk> = vec![
+        ('(', Chunk::PAREN),
+        ('[', Chunk::SQUARE),
+        ('{', Chunk::CURLY),
+        ('<', Chunk::ANGLE),
+    ]
+    .into_iter()
+    .collect();
+    static ref close_chars: HashMap<char, Chunk> = vec![
+        (')', Chunk::PAREN),
+        (']', Chunk::SQUARE),
+        ('}', Chunk::CURLY),
+        ('>', Chunk::ANGLE),
+    ]
+    .into_iter()
+    .collect();
+}
 
 pub fn solve_part_1() {
     let lines: Vec<&str> = INPUT.lines().into_iter().collect();
@@ -9,8 +30,8 @@ pub fn solve_part_1() {
     for r in results {
         match r {
             ValidationResult::OK => {}
-            ValidationResult::INCOMPLETE(chunks) => {}
-            ValidationResult::CORRUPT(chunk, c) => {
+            ValidationResult::INCOMPLETE(_) => {}
+            ValidationResult::CORRUPT(_, c) => {
                 error_score += match c {
                     ')' => 3,
                     ']' => 57,
@@ -25,7 +46,7 @@ pub fn solve_part_1() {
     println!("Day #10 Part 1: {} ", error_score);
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Chunk {
     PAREN,
     SQUARE,
@@ -44,81 +65,20 @@ fn validate_line(line: &str) -> ValidationResult {
     let mut chunk_stack: Vec<Chunk> = Vec::new();
 
     for x in line.chars() {
-        match x {
-            '(' => {
-                chunk_stack.push(Chunk::PAREN);
+        match open_chars.get(&x) {
+            Some(c) => {
+                chunk_stack.push(*c);
             }
-            '[' => {
-                chunk_stack.push(Chunk::SQUARE);
-            }
-            '{' => {
-                chunk_stack.push(Chunk::CURLY);
-            }
-            '<' => {
-                chunk_stack.push(Chunk::ANGLE);
-            }
+            None => match close_chars.get(&x) {
+                Some(c) => {
+                    let cur_chunk = chunk_stack.pop().unwrap();
 
-            ')' => match chunk_stack.pop() {
-                Some(chunk) => match chunk {
-                    Chunk::ANGLE => {
-                        return ValidationResult::CORRUPT(chunk, x);
+                    if discriminant(c) != discriminant(&cur_chunk) {
+                        return ValidationResult::CORRUPT(cur_chunk, x);
                     }
-                    Chunk::SQUARE => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::CURLY => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    _ => {}
-                },
-                None => return ValidationResult::INCOMPLETE(chunk_stack),
+                }
+                None => {}
             },
-            ']' => match chunk_stack.pop() {
-                Some(chunk) => match chunk {
-                    Chunk::ANGLE => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::PAREN => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::CURLY => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    _ => {}
-                },
-                None => return ValidationResult::INCOMPLETE(chunk_stack),
-            },
-            '}' => match chunk_stack.pop() {
-                Some(chunk) => match chunk {
-                    Chunk::ANGLE => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::SQUARE => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::PAREN => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    _ => {}
-                },
-                None => return ValidationResult::INCOMPLETE(chunk_stack),
-            },
-            '>' => match chunk_stack.pop() {
-                Some(chunk) => match chunk {
-                    Chunk::PAREN => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::SQUARE => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    Chunk::CURLY => {
-                        return ValidationResult::CORRUPT(chunk, x);
-                    }
-                    _ => {}
-                },
-                None => return ValidationResult::INCOMPLETE(chunk_stack),
-            },
-            _ => unreachable!(),
         }
     }
 
@@ -137,9 +97,6 @@ pub fn solve_part_2() {
 
     for r in results {
         match r {
-            ValidationResult::OK => {}
-            ValidationResult::CORRUPT(chunk, c) => {}
-
             ValidationResult::INCOMPLETE(mut chunks) => {
                 let mut cur_score = 0;
                 while chunks.len() > 0 {
@@ -155,6 +112,7 @@ pub fn solve_part_2() {
                 }
                 autocomplete_scores.push(cur_score);
             }
+            _ => {}
         }
     }
 

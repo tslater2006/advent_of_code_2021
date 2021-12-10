@@ -1,6 +1,8 @@
 mod days;
 
 use std::{ops::Sub, time::Instant};
+#[macro_use]
+extern crate lazy_static;
 
 macro_rules! run_day {
     ($($a:ident),*) => {
