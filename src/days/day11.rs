@@ -23,7 +23,7 @@ pub fn solve_part_1() {
         total_flashes += run_step(&mut grid, &neighbor_map);
     }
 
-    println!("Flash count: {}", total_flashes);
+    println!("Day #11 Part 1: {}", total_flashes);
 }
 
 pub fn solve_part_2() {
@@ -48,7 +48,7 @@ pub fn solve_part_2() {
         step_count += 1;
     }
 
-    println!("Part 2: {}", step_count);
+    println!("Day #11 Part 2: {}", step_count);
 }
 
 fn print_grid(grid: &Vec<Vec<u8>>) {
