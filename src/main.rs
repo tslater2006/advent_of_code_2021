@@ -24,7 +24,7 @@ fn main() {
     }
 
     let start = Instant::now();
-    run_day!(day10);
+    run_day!(day10_2);
     let stop = Instant::now();
 
     println!("Ran in {:?}ms", stop.sub(start).as_secs_f64() * 1000.0);
