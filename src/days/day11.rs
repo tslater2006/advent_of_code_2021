@@ -1,4 +1,6 @@
-use std::collections::HashMap;
+use pathfinding::num_traits::ToPrimitive;
+use rand::Rng;
+use std::{collections::HashMap, ops::Sub, time::Instant};
 
 const INPUT: &str = include_str!("..\\..\\inputs\\day11.txt");
 
@@ -26,6 +28,50 @@ pub fn solve_part_1() {
     println!("Day #11 Part 1: {}", total_flashes);
 }
 
+pub fn find_sync_extra() {
+    let mut rng = rand::thread_rng();
+    let mut grid: Vec<Vec<u8>> = gen_random_map();
+    let mut neighbor_map: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
+
+    for y in 0..10 {
+        for x in 0..10 {
+            let neighbors = neighbor_points(x, y, 10, 10);
+            neighbor_map.insert((x, y), neighbors);
+        }
+    }
+
+    let mut last_steps = 0;
+    let mut success = 0;
+    let mut total = 0;
+    let count = 10000;
+    for _ in 0..1000 {
+        total += 1;
+        grid = gen_random_map();
+        if run_until_sync_or_step(&mut grid, &mut neighbor_map, count) > 0 {
+            success += 1;
+        }
+    }
+
+    let ratio = (success.to_f64().unwrap() / total.to_f64().unwrap()) * 100.0;
+    println!(
+        "{} of {} grids complete within {} - Ratio: {}",
+        success, total, count, ratio
+    );
+}
+
+fn gen_random_map() -> Vec<Vec<u8>> {
+    let mut rng = rand::thread_rng();
+    let mut grid: Vec<Vec<u8>> = Vec::new();
+    for y in 0..10 {
+        grid.push(Vec::new() as Vec<u8>);
+        for x in 0..10 {
+            grid[y].push(rng.gen_range(1..=9));
+        }
+    }
+
+    grid
+}
+
 pub fn solve_part_2() {
     let mut grid: Vec<Vec<u8>> = INPUT
         .lines()
@@ -33,7 +79,16 @@ pub fn solve_part_2() {
         .collect();
 
     let mut neighbor_map: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
+    let step_count = run_until_sync_or_step(&mut grid, &mut neighbor_map, -1);
 
+    println!("Day #11 Part 2: {}", step_count);
+}
+
+fn run_until_sync_or_step(
+    grid: &mut Vec<Vec<u8>>,
+    neighbor_map: &mut HashMap<(usize, usize), Vec<(usize, usize)>>,
+    count: i32,
+) -> u32 {
     for y in 0..grid.len() {
         for x in 0..grid[y].len() {
             let neighbors = neighbor_points(x, y, grid[y].len() as i8, grid.len() as i8);
@@ -44,11 +99,15 @@ pub fn solve_part_2() {
     let mut total_flashes = 0;
     let mut step_count = 0;
     while total_flashes != grid.len() * grid[0].len() {
-        total_flashes = run_step(&mut grid, &neighbor_map);
+        total_flashes = run_step(grid, &neighbor_map);
         step_count += 1;
+
+        if count >= 0 && step_count > count as u32 {
+            return 0;
+        }
     }
 
-    println!("Day #11 Part 2: {}", step_count);
+    step_count
 }
 
 fn print_grid(grid: &Vec<Vec<u8>>) {
