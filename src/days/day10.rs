@@ -3,7 +3,7 @@ use std::{collections::HashMap, mem::discriminant};
 const INPUT: &str = include_str!("..\\..\\inputs\\day10.txt");
 
 lazy_static! {
-    static ref open_chars: HashMap<char, Chunk> = vec![
+    static ref OPEN_CHARS: HashMap<char, Chunk> = vec![
         ('(', Chunk::PAREN),
         ('[', Chunk::SQUARE),
         ('{', Chunk::CURLY),
@@ -11,7 +11,7 @@ lazy_static! {
     ]
     .into_iter()
     .collect();
-    static ref close_chars: HashMap<char, Chunk> = vec![
+    static ref CLOSE_CHARS: HashMap<char, Chunk> = vec![
         (')', Chunk::PAREN),
         (']', Chunk::SQUARE),
         ('}', Chunk::CURLY),
@@ -65,11 +65,11 @@ fn validate_line(line: &str) -> ValidationResult {
     let mut chunk_stack: Vec<Chunk> = Vec::new();
 
     for x in line.chars() {
-        match open_chars.get(&x) {
+        match OPEN_CHARS.get(&x) {
             Some(c) => {
                 chunk_stack.push(*c);
             }
-            None => match close_chars.get(&x) {
+            None => match CLOSE_CHARS.get(&x) {
                 Some(c) => {
                     let cur_chunk = chunk_stack.pop().unwrap();
 
