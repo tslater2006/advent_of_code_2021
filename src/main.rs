@@ -20,11 +20,12 @@ fn main() {
     /* silly hack to stop "dead code" warnings */
 
     if 1 == 0 {
-        run_day!(day1, day2, day3, day4, day5, day6, day7, day8, day9, day10, day10_2, day11);
+        run_day!(day1, day2, day3, day4, day5, day6, day7, day8, day9, day10, day10_2);
+        run_day!(day11, day12);
     }
 
     let start = Instant::now();
-    run_day!(day12);
+    run_day!(day13);
     let stop = Instant::now();
 
     println!("Ran in {:?}ms", stop.sub(start).as_secs_f64() * 1000.0);
