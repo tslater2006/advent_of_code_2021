@@ -1,6 +1,4 @@
-use pathfinding::num_traits::ToPrimitive;
-use rand::Rng;
-use std::{collections::HashMap, ops::Sub, time::Instant};
+use std::collections::HashMap;
 
 const INPUT: &str = include_str!("..\\..\\inputs\\day11.txt");
 
@@ -26,50 +24,6 @@ pub fn solve_part_1() {
     }
 
     println!("Day #11 Part 1: {}", total_flashes);
-}
-
-pub fn find_sync_extra() {
-    let mut rng = rand::thread_rng();
-    let mut grid: Vec<Vec<u8>> = gen_random_map();
-    let mut neighbor_map: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
-
-    for y in 0..10 {
-        for x in 0..10 {
-            let neighbors = neighbor_points(x, y, 10, 10);
-            neighbor_map.insert((x, y), neighbors);
-        }
-    }
-
-    let mut last_steps = 0;
-    let mut success = 0;
-    let mut total = 0;
-    let count = 10000;
-    for _ in 0..1000 {
-        total += 1;
-        grid = gen_random_map();
-        if run_until_sync_or_step(&mut grid, &mut neighbor_map, count) > 0 {
-            success += 1;
-        }
-    }
-
-    let ratio = (success.to_f64().unwrap() / total.to_f64().unwrap()) * 100.0;
-    println!(
-        "{} of {} grids complete within {} - Ratio: {}",
-        success, total, count, ratio
-    );
-}
-
-fn gen_random_map() -> Vec<Vec<u8>> {
-    let mut rng = rand::thread_rng();
-    let mut grid: Vec<Vec<u8>> = Vec::new();
-    for y in 0..10 {
-        grid.push(Vec::new() as Vec<u8>);
-        for x in 0..10 {
-            grid[y].push(rng.gen_range(1..=9));
-        }
-    }
-
-    grid
 }
 
 pub fn solve_part_2() {
@@ -110,6 +64,7 @@ fn run_until_sync_or_step(
     step_count
 }
 
+#[allow(dead_code)]
 fn print_grid(grid: &Vec<Vec<u8>>) {
     for y in 0..grid.len() {
         for x in 0..grid[y].len() {
