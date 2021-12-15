@@ -90,30 +90,17 @@ fn build_polymers(count: usize) -> u64 {
     }
 
     let mut letters_count = [0u64; 26];
+    letters_count[start_letter as usize] = 1;
+    letters_count[end_letter as usize] = 1;
 
     for k in pairs_count {
         letters_count[(k.0 .0 - b'A') as usize] += k.1;
         letters_count[(k.0 .1 - b'A') as usize] += k.1;
     }
 
-    let mut letter_max = 0u64;
-    let mut letter_min = u64::MAX;
+    let letter_max = letters_count.iter().max().unwrap() / 2;
 
-    for n in 0..26 as u8 {
-        let mut count = letters_count[n as usize];
-
-        if n == start_letter || n == end_letter {
-            count += 1;
-        }
-
-        if count / 2 > letter_max {
-            letter_max = count / 2;
-        }
-
-        if count > 0 && count / 2 < letter_min {
-            letter_min = count / 2;
-        }
-    }
+    let letter_min = letters_count.iter().filter(|a| **a > 0).min().unwrap() / 2;
 
     letter_max - letter_min
 }
