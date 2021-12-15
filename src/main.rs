@@ -17,15 +17,15 @@ macro_rules! run_day {
 }
 
 fn main() {
-    /* silly hack to stop "dead code" warnings */
+    let start = Instant::now();
 
+    /* silly hack to stop "dead code" warnings */
     if 1 == 0 {
         run_day!(day1, day2, day3, day4, day5, day6, day7, day8, day9, day10, day10_2);
-        run_day!(day11, day12, day13);
+        run_day!(day11, day12, day13, day14);
     }
 
-    let start = Instant::now();
-    run_day!(day14);
+    run_day!(day15);
     let stop = Instant::now();
 
     println!("Ran in {:?}ms", stop.sub(start).as_secs_f64() * 1000.0);
