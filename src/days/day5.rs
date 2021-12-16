@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 const INPUT: &str = include_str!("..\\..\\inputs\\day5.txt");
 
 #[derive(Debug)]
@@ -21,7 +23,7 @@ impl Line {
             .collect::<Vec<i16>>();
 
         /* determine appropriate delta to get from p1 to p2 */
-        let travel = ((p2[0]-p1[0]).signum(),(p2[1]-p1[1]).signum());
+        let travel = ((p2[0] - p1[0]).signum(), (p2[1] - p1[1]).signum());
 
         Line {
             point_1: (p1[0], p1[1]),
@@ -42,48 +44,41 @@ pub fn solve_part_1() {
         .filter(|line| !line.is_at_angle())
         .collect();
 
-    let mut point_counts = vec![vec![0u8; 1000]; 1000];
+    let mut points: HashMap<(i16, i16), u16> = HashMap::new();
 
     for l in input_lines {
         let mut cur_point = l.point_1.clone();
 
         while cur_point != l.point_2 {
-            point_counts[cur_point.1 as usize][cur_point.0 as usize] += 1;
-
+            *points.entry(cur_point).or_insert(0) += 1;
             cur_point.0 += l.travel_delta.0;
             cur_point.1 += l.travel_delta.1;
         }
+        *points.entry(cur_point).or_insert(0) += 1;
     }
 
-    let answer: usize = point_counts
-        .into_iter()
-        .map(|row| row.into_iter().filter(|v| *v > 1).count())
-        .sum();
-    //let answer = points.into_values().filter(|v| *v > 1).count();
+    let answer = points.into_values().filter(|v| *v > 1).count();
 
-    println!("Day #5 Part 1: {}", answer);
+    println!("Day 5 Part 1: {}", answer);
 }
 
 pub fn solve_part_2() {
     let input_lines: Vec<Line> = INPUT.lines().map(|v| Line::new(v)).collect();
 
-    let mut point_counts = vec![vec![0u8; 1000]; 1000];
+    let mut points: HashMap<(i16, i16), u16> = HashMap::new();
 
     for l in input_lines {
         let mut cur_point = l.point_1.clone();
 
         while cur_point != l.point_2 {
-            point_counts[cur_point.1 as usize][cur_point.0 as usize] += 1;
-
+            *points.entry(cur_point).or_insert(0) += 1;
             cur_point.0 += l.travel_delta.0;
             cur_point.1 += l.travel_delta.1;
         }
+        *points.entry(cur_point).or_insert(0) += 1;
     }
 
-    let answer: usize = point_counts
-        .into_iter()
-        .map(|row| row.into_iter().filter(|v| *v > 1).count())
-        .sum();
+    let answer = points.into_values().filter(|v| *v > 1).count();
 
-    println!("Day #5 Part 2: {}", answer);
+    println!("Day 5 Part 2: {}", answer);
 }
