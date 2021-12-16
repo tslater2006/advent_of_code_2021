@@ -68,14 +68,13 @@ impl<'a> PacketDataStream<'a> {
 pub fn solve_part_1() {
     let mut stream = PacketDataStream::new(INPUT.as_bytes());
 
-    let packet = read_packet(&mut stream);
+    let packet = BITSPacket::from(&mut stream);
 
-    let mut to_process: Vec<BITSPacket> = Vec::new();
-    to_process.push(packet);
+    let mut to_process: Vec<BITSPacket> = vec![packet];
 
     let mut ans: usize = 0;
 
-    while to_process.len() > 0 {
+    while !to_process.is_empty() {
         let p = to_process.pop().unwrap();
         ans += p.version as usize;
 
@@ -108,94 +107,94 @@ impl BITSPacket {
             size_in_bits: 0,
         }
     }
-}
 
-fn read_packet(stream: &mut PacketDataStream) -> BITSPacket {
-    let mut packet = BITSPacket::new();
-    let stream_start_pos = stream.position();
-    packet.version = stream.read_bits(3) as u8;
-    packet.packet_type = stream.read_bits(3) as u8;
+    pub fn from(stream: &mut PacketDataStream) -> BITSPacket {
+        let mut packet = BITSPacket::new();
+        let stream_start_pos = stream.position();
+        packet.version = stream.read_bits(3) as u8;
+        packet.packet_type = stream.read_bits(3) as u8;
 
-    if packet.packet_type == 4 {
-        let mut last_group = stream.read_bits(1) == 0;
-        while !last_group {
-            let literal_chunk = stream.read_bits(4);
-            packet.literal = (packet.literal << 4) | literal_chunk as u64;
-            last_group = stream.read_bits(1) == 0;
-        }
-        /* read in the last literal chunk */
-        let final_chunk = stream.read_bits(4);
-        packet.literal = (packet.literal << 4) | final_chunk as u64;
-    } else {
-        /* this is an operator */
-        packet.length_type_id = stream.read_bits(1) as u8;
-        if packet.length_type_id == 1 {
-            /* next 11 bits contain how many packets we have */
-            let sub_count = stream.read_bits(11);
-
-            for _ in 0..sub_count {
-                packet.sub_packets.push(read_packet(stream));
+        if packet.packet_type == 4 {
+            let mut last_group = stream.read_bits(1) == 0;
+            while !last_group {
+                let literal_chunk = stream.read_bits(4);
+                packet.literal = (packet.literal << 4) | literal_chunk as u64;
+                last_group = stream.read_bits(1) == 0;
             }
-        }
+            /* read in the last literal chunk */
+            let final_chunk = stream.read_bits(4);
+            packet.literal = (packet.literal << 4) | final_chunk as u64;
+        } else {
+            /* this is an operator */
+            packet.length_type_id = stream.read_bits(1) as u8;
+            if packet.length_type_id == 1 {
+                /* next 11 bits contain how many packets we have */
+                let sub_count = stream.read_bits(11);
 
-        if packet.length_type_id == 0 {
-            let total_sub_bits: usize = stream.read_bits(15) as usize;
-            let mut read_bits: usize = 0;
-
-            while read_bits < total_sub_bits {
-                let sub_packet = read_packet(stream);
-                read_bits += sub_packet.size_in_bits;
-                packet.sub_packets.push(sub_packet);
-            }
-        }
-
-        /* Process operators */
-        packet.literal = match packet.packet_type {
-            0 => packet.sub_packets.iter().map(|p| p.literal).sum(),
-
-            1 => packet.sub_packets.iter().map(|p| p.literal).product(),
-
-            2 => packet.sub_packets.iter().map(|p| p.literal).min().unwrap(),
-
-            3 => packet.sub_packets.iter().map(|p| p.literal).max().unwrap(),
-
-            5 => {
-                if packet.sub_packets[0].literal > packet.sub_packets[1].literal {
-                    1
-                } else {
-                    0
+                for _ in 0..sub_count {
+                    packet.sub_packets.push(BITSPacket::from(stream));
                 }
             }
 
-            6 => {
-                if packet.sub_packets[0].literal < packet.sub_packets[1].literal {
-                    1
-                } else {
-                    0
+            if packet.length_type_id == 0 {
+                let total_sub_bits: usize = stream.read_bits(15) as usize;
+                let mut read_bits: usize = 0;
+
+                while read_bits < total_sub_bits {
+                    let sub_packet = BITSPacket::from(stream);
+                    read_bits += sub_packet.size_in_bits;
+                    packet.sub_packets.push(sub_packet);
                 }
             }
 
-            7 => {
-                if packet.sub_packets[0].literal == packet.sub_packets[1].literal {
-                    1
-                } else {
-                    0
-                }
-            }
+            /* Process operators */
+            packet.literal = match packet.packet_type {
+                0 => packet.sub_packets.iter().map(|p| p.literal).sum(),
 
-            _ => unreachable!(),
+                1 => packet.sub_packets.iter().map(|p| p.literal).product(),
+
+                2 => packet.sub_packets.iter().map(|p| p.literal).min().unwrap(),
+
+                3 => packet.sub_packets.iter().map(|p| p.literal).max().unwrap(),
+
+                5 => {
+                    if packet.sub_packets[0].literal > packet.sub_packets[1].literal {
+                        1
+                    } else {
+                        0
+                    }
+                }
+
+                6 => {
+                    if packet.sub_packets[0].literal < packet.sub_packets[1].literal {
+                        1
+                    } else {
+                        0
+                    }
+                }
+
+                7 => {
+                    if packet.sub_packets[0].literal == packet.sub_packets[1].literal {
+                        1
+                    } else {
+                        0
+                    }
+                }
+
+                _ => unreachable!(),
+            }
         }
+
+        let stream_stop_pos = stream.position();
+        packet.size_in_bits = stream_stop_pos - stream_start_pos;
+        packet
     }
-
-    let stream_stop_pos = stream.position();
-    packet.size_in_bits = stream_stop_pos - stream_start_pos;
-    packet
 }
 
 pub fn solve_part_2() {
     let mut stream = PacketDataStream::new(INPUT.as_bytes());
 
-    let packet = read_packet(&mut stream);
+    let packet = BITSPacket::from(&mut stream);
 
     println!("Day #16 Part 2: {}", packet.literal);
 }
