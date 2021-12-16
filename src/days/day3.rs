@@ -59,24 +59,30 @@ pub fn solve_part_2() {
     }
 
     /* having fun with fold to turn bit string to number :) */
-    let oxygen_answer = oxygen_lines[0].as_bytes().iter().fold(0 as u32, |a,b | (a << 1) + (*b-0x30) as u32);
-    let co2_answer = co2_lines[0].as_bytes().iter().fold(0 as u32, |a,b | (a << 1) + (*b-0x30) as u32);
+    let oxygen_answer = oxygen_lines[0]
+        .as_bytes()
+        .iter()
+        .fold(0_u32, |a, b| (a << 1) + (*b - 0x30) as u32);
+    let co2_answer = co2_lines[0]
+        .as_bytes()
+        .iter()
+        .fold(0_u32, |a, b| (a << 1) + (*b - 0x30) as u32);
 
     println!("Day #3 Part 2: {:?}", oxygen_answer * co2_answer);
 }
 
 /* effectively adds up all the bits by column, and then determines if count is > half* of all the numbers
-   for odd number of lines half is considered (count + 1) / 2 */
-fn get_most_frequent_bits(list: &Vec<&str>) -> Vec<u8> {
+for odd number of lines half is considered (count + 1) / 2 */
+fn get_most_frequent_bits(list: &[&str]) -> Vec<u8> {
     let line_count = list.len() as u32;
-    let line_width:u32 = list[0].len() as u32;
+    let line_width: u32 = list[0].len() as u32;
 
     let bit_threshold: u32 = match line_count % 2 {
         1 => (line_count + 1) / 2,
         0 => line_count / 2,
-        _ => panic!()
+        _ => panic!(),
     };
-    let mut bit_counts = vec![0 as u32; line_width as usize];
+    let mut bit_counts = vec![0_u32; line_width as usize];
 
     for line in list {
         line.chars()
@@ -94,5 +100,5 @@ fn get_most_frequent_bits(list: &Vec<&str>) -> Vec<u8> {
             false => 0,
         });
     }
-    return most_frequent;
+    most_frequent
 }

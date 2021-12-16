@@ -20,19 +20,12 @@ fn parse_input() -> (Vec<u8>, HashMap<(u8, u8), u8>) {
     lines.next();
 
     let mut rule_map: HashMap<(u8, u8), u8> = HashMap::new();
-    loop {
-        match lines.next() {
-            Some(l) => {
-                let mut parts = l.split(" -> ");
-                let key_bytes = parts.next().unwrap().as_bytes();
-                let key = (key_bytes[0], key_bytes[1]);
-                rule_map.insert(key, parts.next().unwrap().as_bytes()[0]);
-            }
 
-            None => {
-                break;
-            }
-        }
+    for l in lines {
+        let mut parts = l.split(" -> ");
+        let key_bytes = parts.next().unwrap().as_bytes();
+        let key = (key_bytes[0], key_bytes[1]);
+        rule_map.insert(key, parts.next().unwrap().as_bytes()[0]);
     }
 
     (start, rule_map)

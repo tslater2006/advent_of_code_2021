@@ -53,7 +53,7 @@ fn run_until_sync_or_step(
     let mut total_flashes = 0;
     let mut step_count = 0;
     while total_flashes != grid.len() * grid[0].len() {
-        total_flashes = run_step(grid, &neighbor_map);
+        total_flashes = run_step(grid, neighbor_map);
         step_count += 1;
 
         if count >= 0 && step_count > count as u32 {
@@ -65,10 +65,10 @@ fn run_until_sync_or_step(
 }
 
 #[allow(dead_code)]
-fn print_grid(grid: &Vec<Vec<u8>>) {
-    for y in 0..grid.len() {
-        for x in 0..grid[y].len() {
-            print!("{}", (grid[y][x] + b'0') as char);
+fn print_grid(grid: &[Vec<u8>]) {
+    for row in grid {
+        for col in row {
+            print!("{}", (col + b'0') as char);
         }
         println!();
     }
@@ -90,15 +90,13 @@ fn run_step(
         }
     }
 
-    while flashers.len() > 0 {
+    while !flashers.is_empty() {
         let p = flashers.pop().unwrap();
 
         for n in point_map.get(&p).unwrap() {
             grid[n.1][n.0] += 1;
-            if grid[n.1][n.0] > 9 {
-                if !flashers.contains(n) && !processed_flashers.contains(n) {
-                    flashers.push(*n);
-                }
+            if grid[n.1][n.0] > 9 && !flashers.contains(n) && !processed_flashers.contains(n) {
+                flashers.push(*n);
             }
         }
 

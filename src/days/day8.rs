@@ -5,8 +5,8 @@ pub fn solve_part_1() {
         .lines()
         .into_iter()
         .map(|l| {
-            let sp = l.split("|").map(|s| s.trim());
-            let out: Vec<&str> = sp.skip(1).next().unwrap().split(" ").collect();
+            let mut sp = l.split('|').map(|s| s.trim());
+            let out: Vec<&str> = sp.nth(1).unwrap().split(' ').collect();
 
             out
         })
@@ -16,13 +16,7 @@ pub fn solve_part_1() {
         .iter()
         .map(|i| i.iter().filter(|f| 
             // 2 4 3 7
-            match f.len() {
-                2 => true,
-                4 => true,
-                3 => true,
-                7 => true,
-                _ => false
-            }
+            matches!(f.len(), 2 | 4 | 3 | 7)
         ).count())
         .sum();
 
@@ -36,9 +30,9 @@ pub fn solve_part_2() {
         .lines()
         .into_iter()
         .map(|l| {
-            let mut sp = l.split("|").map(|s| s.trim());
-            let obs: Vec<&str> = sp.next().unwrap().split(" ").collect();
-            let out: Vec<&str> = sp.next().unwrap().split(" ").collect();
+            let mut sp = l.split('|').map(|s| s.trim());
+            let obs: Vec<&str> = sp.next().unwrap().split(' ').collect();
+            let out: Vec<&str> = sp.next().unwrap().split(' ').collect();
 
             (obs, out)
         })
@@ -52,7 +46,7 @@ pub fn solve_part_2() {
 
 }
 
-fn resolve_line(observation: &Vec<&str>, outputs: &Vec<&str>) -> usize {
+fn resolve_line(observation: &[&str], outputs: &[&str]) -> usize {
 
     let mut numbers = ["";10];
 
@@ -62,38 +56,38 @@ fn resolve_line(observation: &Vec<&str>, outputs: &Vec<&str>) -> usize {
     numbers[7] = observation.iter().find(|f| f.len() == 3).unwrap();
     numbers[8] = observation.iter().find(|f| f.len() == 7).unwrap();
 
-    numbers[6] = observation.iter().filter(|i| {
+    numbers[6] = observation.iter().find(|i| {
         i.len() == 6 && !all_of_target_in_source(i, numbers[1])
-    }).next().unwrap();
+    }).unwrap();
 
-    numbers[9] = observation.iter().filter(|i| {
+    numbers[9] = observation.iter().find(|i| {
         i.len() == 6 && all_of_target_in_source(i, numbers[4])
-    }).next().unwrap();
+    }).unwrap();
 
-    numbers[3] = observation.iter().filter(|i| {
+    numbers[3] = observation.iter().find(|i| {
         i.len() == 5 && all_of_target_in_source(i, numbers[1])
-    }).next().unwrap();
+    }).unwrap();
 
-    numbers[0] = observation.iter().filter(|i| {
+    numbers[0] = observation.iter().find(|i| {
         i.len() == 6 && all_of_target_in_source(i, numbers[1]) && **i != numbers[9]
-    }).next().unwrap();
+    }).unwrap();
 
-    numbers[5] = observation.iter().filter(|i| {
+    numbers[5] = observation.iter().find(|i| {
         i.len() == 5 && partial_overlap_count(i, numbers[6]) == 5
-    }).next().unwrap();
+    }).unwrap();
 
-    numbers[2] = observation.iter().filter(|i| {
+    numbers[2] = observation.iter().find(|i| {
         i.len() == 5 && **i != numbers[3] && partial_overlap_count(i, numbers[6]) == 4
-    }).next().unwrap();
+    }).unwrap();
 
     let mut displayed_value = 0;
-    for x in 0..outputs.len() {
+    for item in outputs {
 
         displayed_value *= 10;
 
-        for y in 0..10 {
+        for (y,n) in numbers.iter().enumerate() {
             
-            if complete_overlap(outputs[x], numbers[y]) {
+            if complete_overlap(item, n) {
                 displayed_value += y;
                 break;
             }

@@ -53,7 +53,7 @@ pub fn solve_part_2() {
         }
     }
 
-    autocomplete_scores.sort();
+    autocomplete_scores.sort_unstable();
     let ans: usize = autocomplete_scores[autocomplete_scores.len() / 2];
     println!("Day #10 Part 2: {} ", ans);
 }

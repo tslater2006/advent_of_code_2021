@@ -29,14 +29,13 @@ impl fmt::Display for BingoBoard {
                     write!(f, "{} ", self.board[y][x]).unwrap();
                 }
             }
-            writeln!(f,"").unwrap();
+            writeln!(f).unwrap();
         }
         Ok(())
     }
 }
 
 impl BingoBoard {
-    
     fn new(lines: &[&str]) -> BingoBoard {
         /* parse the 6 lines passed in */
         assert!(lines.len() == 6);
@@ -49,16 +48,13 @@ impl BingoBoard {
 
         /* we need to go through the 5 last lines, parse out the numbers, set board up */
 
-        for y in 1..6 {
-            let line_numbers: Vec<u16> = lines[y]
-                .split(" ")
+        for (y, line) in lines.iter().enumerate().take(6).skip(1) {
+            let line_numbers: Vec<u16> = line
+                .split(' ')
                 .filter(|l| !l.is_empty())
                 .map(|n| n.parse().unwrap())
                 .collect();
-
-            for x in 0..5 {
-                new_board.board[y - 1][x] = line_numbers[x];
-            }
+            new_board.board[y - 1][..5].clone_from_slice(&line_numbers[..5]);
         }
 
         new_board
@@ -117,7 +113,7 @@ impl BingoBoard {
 pub fn solve_part_1() {
     let lines: Vec<&str> = INPUT.lines().collect();
     let board_lines: Vec<&str> = INPUT.lines().into_iter().skip(1).collect();
-    let drawn_numbers: Vec<u16> = lines[0].split(",").map(|v| v.parse().unwrap()).collect();
+    let drawn_numbers: Vec<u16> = lines[0].split(',').map(|v| v.parse().unwrap()).collect();
 
     //let boards: Vec<BingoBoard> = lines.iter().skip(1).
 
@@ -135,13 +131,12 @@ pub fn solve_part_1() {
             }
         }
     }
-
 }
 
 pub fn solve_part_2() {
     let lines: Vec<&str> = INPUT.lines().collect();
     let board_lines: Vec<&str> = INPUT.lines().into_iter().skip(1).collect();
-    let drawn_numbers: Vec<u16> = lines[0].split(",").map(|v| v.parse().unwrap()).collect();
+    let drawn_numbers: Vec<u16> = lines[0].split(',').map(|v| v.parse().unwrap()).collect();
 
     //let boards: Vec<BingoBoard> = lines.iter().skip(1).
 
@@ -150,25 +145,22 @@ pub fn solve_part_2() {
     let mut winning_board_count = 0;
     'num_loop: for num in drawn_numbers {
         for board in boards.iter_mut() {
-            match board.result {
-                BoardResult::NoWin => {
-                    let result = board.play_number(num);
-                    match result {
-                        BoardResult::Win(winning_num) => {
-        
-                            winning_board_count += 1;
-                            if winning_board_count == board_count {
-                                println!("Day #4 Part 2: {}", board.get_unused_sum() * winning_num);
-                                break 'num_loop;
-                            }
-                        }
-                        BoardResult::NoWin => {}
+            //match board.result {
+            if let BoardResult::NoWin = board.result {
+                let result = board.play_number(num);
+                if let BoardResult::Win(winning_num) = result {
+                    //BoardResult::Win(winning_num) => {
+                    winning_board_count += 1;
+                    if winning_board_count == board_count {
+                        println!("Day #4 Part 2: {}", board.get_unused_sum() * winning_num);
+                        break 'num_loop;
                     }
+                    /* }
+                    BoardResult::NoWin => {}*/
                 }
-                _ => {}
             }
-           
+            /*    _ => {}
+            }*/
         }
     }
-
 }

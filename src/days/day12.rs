@@ -6,7 +6,7 @@ pub fn solve_part_1() {
     let mut paths: HashMap<&str, Vec<&str>> = HashMap::new();
 
     for l in INPUT.lines().into_iter() {
-        let parts: Vec<&str> = l.split("-").into_iter().collect();
+        let parts: Vec<&str> = l.split('-').into_iter().collect();
         match paths.get_mut(parts[0]) {
             Some(p) => {
                 p.push(parts[1]);
@@ -40,7 +40,7 @@ pub fn solve_part_2() {
     let mut paths: HashMap<&str, Vec<&str>> = HashMap::new();
 
     for l in INPUT.lines().into_iter() {
-        let parts: Vec<&str> = l.split("-").into_iter().collect();
+        let parts: Vec<&str> = l.split('-').into_iter().collect();
 
         match paths.get_mut(parts[0]) {
             Some(p) => {
@@ -159,7 +159,7 @@ fn find_all_paths2<'a>(
     passing clones as needed and the current did_double_visit status */
     let children = map.get(node).unwrap();
     for child in children {
-        if did_double_visit && path_list.contains(&child) && child.as_bytes()[0] >= 97 {
+        if did_double_visit && path_list.contains(child) && child.as_bytes()[0] >= 97 {
             continue;
         }
 

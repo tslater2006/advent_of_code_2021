@@ -5,7 +5,7 @@ const INPUT: &str = include_str!("..\\..\\inputs\\day6.txt");
 fn get_spawn_count(cache: &mut HashMap<(usize, usize), usize>, age: usize, days: usize) -> usize {
     match cache.get(&(age, days)) {
         Some(v) => {
-            return *v;
+            *v
         }
         None => {
             let mut spawn_count = 0;
@@ -26,7 +26,7 @@ fn get_spawn_count(cache: &mut HashMap<(usize, usize), usize>, age: usize, days:
 }
 
 pub fn solve_part_1() {
-    let fish: Vec<u8> = INPUT.split(",").map(|s| s.parse().unwrap()).collect();
+    let fish: Vec<u8> = INPUT.split(',').map(|s| s.parse().unwrap()).collect();
     let mut cache: HashMap<(usize, usize), usize> = HashMap::new();
     let ans: usize = fish
         .iter()
@@ -38,7 +38,7 @@ pub fn solve_part_1() {
 }
 
 pub fn solve_part_2() {
-    let fish: Vec<u8> = INPUT.split(",").map(|s| s.parse().unwrap()).collect();
+    let fish: Vec<u8> = INPUT.split(',').map(|s| s.parse().unwrap()).collect();
     let mut cache: HashMap<(usize, usize), usize> = HashMap::new();
     let ans: usize = fish
         .iter()

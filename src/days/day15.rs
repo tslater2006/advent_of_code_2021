@@ -5,7 +5,7 @@ use pathfinding::prelude::dijkstra;
 const INPUT: &str = include_str!("..\\..\\inputs\\day15.txt");
 
 pub fn solve_part_1() {
-    let mut grid: Vec<Vec<usize>> = INPUT
+    let grid: Vec<Vec<usize>> = INPUT
         .lines()
         .map(|l| l.as_bytes().iter().map(|b| (*b - b'0') as usize).collect())
         .collect();
@@ -19,7 +19,7 @@ pub fn solve_part_1() {
         }
     }
 
-    let start = (0 as usize, 0 as usize);
+    let start = (0_usize, 0_usize);
     //let stop = (0 as usize, 0 as usize);
     let stop = ((grid.len() - 1) as usize, (grid[0].len() - 1) as usize);
 
@@ -42,7 +42,7 @@ pub fn solve_part_1() {
 }
 
 pub fn solve_part_2() {
-    let mut grid: Vec<Vec<usize>> = INPUT
+    let grid: Vec<Vec<usize>> = INPUT
         .lines()
         .map(|l| l.as_bytes().iter().map(|b| (*b - b'0') as usize).collect())
         .collect();
@@ -57,7 +57,7 @@ pub fn solve_part_2() {
         }
     }
 
-    let start = (0 as usize, 0 as usize);
+    let start = (0_usize, 0_usize);
     let stop = (
         ((grid.len() * 5) - 1) as usize,
         ((grid[0].len() * 5) - 1) as usize,

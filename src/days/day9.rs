@@ -41,7 +41,7 @@ pub fn solve_part_2() {
             .count()
         })
         .collect();
-    basin_sizes.sort();
+    basin_sizes.sort_unstable();
     basin_sizes.reverse();
 
     let mut ans = 1;
@@ -52,7 +52,7 @@ pub fn solve_part_2() {
     println!("Day #9 Part 2: {} ", ans);
 }
 
-fn get_neighbors(point: (i32, i32), map: &Vec<Vec<u8>>) -> Vec<(i32, i32)> {
+fn get_neighbors(point: (i32, i32), map: &[Vec<u8>]) -> Vec<(i32, i32)> {
     let neighbor_checks: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
     let mut list: Vec<(i32, i32)> = Vec::new();
     for check in neighbor_checks {
@@ -71,13 +71,13 @@ fn get_neighbors(point: (i32, i32), map: &Vec<Vec<u8>>) -> Vec<(i32, i32)> {
     list
 }
 
-fn get_low_spots(map: &Vec<Vec<u8>>) -> Vec<(i32, i32)> {
+fn get_low_spots(map: &[Vec<u8>]) -> Vec<(i32, i32)> {
     let mut low_spots: Vec<(i32, i32)> = Vec::new();
     for y in 0..map.len() as i32 {
         for x in 0..map[0].len() as i32 {
             let cur_val = map[y as usize][x as usize];
 
-            let neighbors = get_neighbors((x, y), &map);
+            let neighbors = get_neighbors((x, y), map);
 
             if neighbors.len()
                 == neighbors
